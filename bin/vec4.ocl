@@ -1,0 +1,26 @@
+float vec4_length_squared(float4 e) {
+    return e.x*e.x + e.y*e.y + e.z*e.z;
+}
+
+
+float vec4_length(float4 vec) {
+    return sqrt(vec4_length_squared(vec));
+}
+
+
+float vec4_dot(const float4 u, const float4 v) {
+    return u.x * v.x
+         + u.y * v.y
+         + u.z * v.z;
+}
+
+float4 vec4_cross(const float4 u, const float4 v) {
+    return (float4)(u.y * v.z - u.z * v.y,
+                u.z * v.x - u.x * v.z,
+                u.x * v.y - u.y * v.x, 
+                0.0f);
+}
+
+float4 unit_vector(float4 v) {
+    return v / (float4)(vec4_length(v));
+}

@@ -1,0 +1,10 @@
+typedef struct ray{
+  float4 orig;
+  float4 dir;
+}ray;
+
+
+float4 ray_at(ray r, float t) {
+  return r.orig + t*r.dir;
+}
+

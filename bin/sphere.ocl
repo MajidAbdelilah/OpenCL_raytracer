@@ -1,0 +1,38 @@
+#include "hittable.ocl"
+#include "vec4.ocl"
+
+typedef struct sphere{
+        float4 center;
+        float radius;
+        float4 p;
+        float4 normal;
+        float t;
+        bool front_face;
+
+}sphere;
+
+bool sphere_hit(const ray r, float t_min, float t_max, hit_record rec) const {
+    float4 oc = r.orig - center;
+    float a = vec4_length_squared(r.dir);
+    float half_b = vec4_dot(oc, r.dir);
+    float c = vec4_length_squared(oc) - radius*radius;
+
+    float discriminant = half_b*half_b - a*c;
+    if (discriminant < 0.0f) return false;
+    float sqrtd = sqrt(discriminant);
+
+    // Find the nearest root that lies in the acceptable range.
+    float root = (0.0f-half_b - sqrtd) / a;
+    if (root < t_min || t_max < root) {
+        root = (0.0f-half_b + sqrtd) / a;
+        if (root < t_min || t_max < root)
+            return false;
+    }
+
+    rec.t = root;
+    rec.p = ray_at(r, rec.t);
+    vec3 outward_normal = (rec.p - center) / radius;
+    rec.set_face_normal(r, outward_normal);
+
+    return true;
+}
